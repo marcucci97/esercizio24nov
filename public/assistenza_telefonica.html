@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title>Esercizio 2x02 JavaScript – Assistenza telefoni</title>
+	<style>
+		
+	body {
+		font-family: Arial;
+		margin: 30px;
+		background-color: #006464;
+		color: #333333;
+		}
+
+	.box {
+		max-width: 600px;
+		margin: 0 auto;
+		background: #80ff80;
+		padding: 25px;
+		border-radius: 8px;
+		}
+
+	h2 {
+		margin-top: 0;
+		color: black;
+		border-bottom: 2px solid #006400;
+		padding-bottom: 8px;
+		}
+
+/* form */
+	.campo {
+		margin-bottom: 15px;
+    }
+
+	label {
+		display: block;
+		font-weight: bold;
+		margin-bottom: 5px;
+    }
+
+	input, select, textarea {
+		width: 100%;
+		padding: 8px;
+		box-sizing: border-box;             /*mi evita che sbordano le caselle dalla box esterna*/
+		border: 1px solid #006400;
+		border-radius: 4px;
+		resize: none;                       /*mi evita che la text area sia modificabile da browser*/
+	}
+
+	button {
+		background-color: #28a745;
+		color: black;
+		border: none;
+		padding: 10px 18px;
+		font-size: 15px;
+		border-radius: 4px;
+		margin-top: 10px;
+	}
+
+	button:hover {
+		background-color: #ffffff;
+	}
+
+	
+/* ricevuta (inizialmente nascosta) */
+	#contenitore-ricevuta {
+		display: none;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 15px;
+	}
+
+	th, td {
+		border: 1px solid #444444;
+		padding: 10px;
+		text-align: left;
+	}
+
+	th {
+		background-color: #eef3f8;
+		width: 45%;
+	}
+
+	.btn-secondario {
+		background-color: #ff8000;
+	}
+
+	</style>
+</head>
+<body>
+
+<!-- form -->
+
+	<div id="contenitore-form" class="box">
+		<h2>Bentornato Operatore n° 4. <br />Compila il modulo di assistenza</h2>
+		<form id="form-assistenza">
+		
+			<div class="campo">
+				<label for="clienteN">Nome Cliente *</label>
+				<input type="text" id="clienteN" required placeholder="Es. Mario">
+			</div>
+
+			<div class="campo">
+				<label for="clienteC">Cognome Cliente *</label>
+				<input type="text" id="clienteC" required placeholder="Es. Rossi">
+			</div>
+	  
+			<div class="campo">
+				<label for="codFisc">Codice Fiscale *</label>
+				<input type="text" id="codFisc" maxlength="16" required placeholder="Es. RSSMRA75D14L219H">
+			</div>
+	  
+			<div class="campo">
+				<label for="quartiere">Quartiere di RM *</label>
+				<select id="quartiere" required>
+					<option value="">-- Seleziona Quartiere --</option>
+					<option value="Appio Latino">Appio Latino</option>
+					<option value="Flaminio">Flaminio</option>
+					<option value="Gianicolense">Gianicolense</option>
+					<option value="Marconi">Marconi</option>
+					<option value="Portuense">Portuense</option>
+					<option value="Trastevere">Trastevere</option>
+					<option value="Trullo">Trullo</option>
+					<option value="Tuscolana">Tuscolana</option>
+				</select>
+			</div>
+	  
+			<div class="campo">
+				<label for="gestore">Gestore Dispositivo *</label>
+				<input type="text" id="gestore" required placeholder="Es. Vodafone">
+			</div>
+
+			<div class="campo">
+				<label for="telDispositivo">Numero di telefono del dispositivo *</label>
+				<input type="tel" id="telDispositivo" required placeholder="Es. 3330011222">
+			</div>
+
+			<div class="campo">
+				<label for="marca">Marca Dispositivo *</label>
+				<select id="marca" required>
+					<option value="">-- Seleziona marca --</option>
+					<option value="Apple">Apple</option>
+					<option value="Samsung">Samsung</option>
+					<option value="Xiaomi">Xiaomi</option>
+					<option value="Motorola">Motorola</option>
+					<option value="Altro">Altro</option>
+				</select>
+			</div>
+
+			<div class="campo">
+				<label for="modello">Modello *</label>
+				<input type="text" id="modello" required placeholder="Es. Galaxy Note">
+			</div>
+
+			<div class="campo">
+				<label for="guasto">Descrizione del problema riscontrato *</label>
+				<textarea id="guasto" rows="3" required placeholder="Es. Vetro rotto, batteria non carica..."></textarea>
+			</div>
+
+ 			<div class="campo">
+ 				<label for="telAlternativo">Recapito telefonico alternativo (opzionale)</label>
+ 				<input type="tel" id="telAlternativo" placeholder="Lasciare vuoto se uguale al precedente">
+ 			</div>
+
+			<button type="submit">Genera Ricevuta di Consegna</button>
+		</form>
+	</div>
+
+<!-- ricevuta -->
+
+	<div id="contenitore-ricevuta" class="box" style="display: none;">
+		<h2>SmartphoneMania - Via Paladini 12, Roma <br />Ricevuta di Consegna</h2>
+
+		<table>
+			<tr>
+				<th>Nome</th>
+				<td id="ric-cliente-n"></td>
+			</tr>
+			<tr>
+				<th>Cognome</th>
+				<td id="ric-cliente-c"></td>
+			</tr>
+			<tr>
+				<th>Codice Fiscale</th>
+				<td id="ric-cod-fisc"></td>
+			</tr>
+			<tr>
+				<th>Quartiere</th>
+				<td id="ric-quartiere"></td>
+			</tr>
+			<tr>
+				<th>Gestore disp.</th>
+				<td id="ric-gestore"></td>
+			</tr>
+			<tr>
+				<th>Dispositivo</th>
+				<td id="ric-marca"></td>
+			</tr>
+			<tr>
+				<th>Modello</th>
+				<td id="ric-modello"></td>
+			</tr>
+			<tr>
+				<th>Difetto dichiarato</th>
+				<td id="ric-guasto"></td>
+			</tr>
+			<tr>
+				<th>Numero dispositivo</th>
+				<td id="ric-tel-disp"></td>
+			</tr>
+			<tr>
+				<th>Numero per ricontatto</th>
+				<td id="ric-tel-alt"></td>
+			</tr>
+		</table>
+	</div>
+
+<!-- pulsanti staccati dalla ricevuta -->
+
+	<div id="area-pulsanti" class="box" style="display: none; margin-top: 10px;">
+		<button type="button" class="btn-secondario" id="btn-nuovo">Nuovo Cliente/Ripristina Form</button>
+	</div>
+
+ 
+<script>
+		
+		const boxForm = document.getElementById("contenitore-form");
+		const boxRicevuta = document.getElementById("contenitore-ricevuta");
+		const areaPulsanti = document.getElementById("area-pulsanti");
+		const form = document.getElementById("form-assistenza");
+		const btnNuovo = document.getElementById("btn-nuovo");
+
+// DEFINIZIONE DELLE FUNZIONI
+
+		function generaRicevuta(evento) {
+			evento.preventDefault();
+
+// lettura valori inseriti dall'operatore
+			const clienteN = document.getElementById("clienteN").value;
+			const clienteC = document.getElementById("clienteC").value;
+			const codFisc = document.getElementById("codFisc").value.toUpperCase();
+			const quartiere = document.getElementById("quartiere").value;
+			const gestore = document.getElementById("gestore").value;
+			const telDispositivo = document.getElementById("telDispositivo").value;
+			const marca = document.getElementById("marca").value;
+			const modello = document.getElementById("modello").value;
+			const guasto = document.getElementById("guasto").value;
+			let telAlternativo = document.getElementById("telAlternativo").value;
+
+// riusa il numero già immesso se non inserisce niente l'op.
+				if (telAlternativo === "") {
+					telAlternativo = telDispositivo;
+				}
+
+// stampa nella tabella degli elementi
+				document.getElementById("ric-cliente-n").textContent = clienteN;
+				document.getElementById("ric-cliente-c").textContent = clienteC;
+				document.getElementById("ric-cod-fisc").textContent = codFisc;
+				document.getElementById("ric-quartiere").textContent = quartiere;
+				document.getElementById("ric-gestore").textContent = gestore;
+				document.getElementById("ric-marca").textContent = marca;
+				document.getElementById("ric-modello").textContent = modello;
+				document.getElementById("ric-guasto").textContent = guasto;
+				document.getElementById("ric-tel-disp").textContent = telDispositivo;
+				document.getElementById("ric-tel-alt").textContent = telAlternativo;
+
+// nasconde il form e mostra ricevuta + pulsante sotto
+				boxForm.style.display = "none";
+				boxRicevuta.style.display = "block";
+				areaPulsanti.style.display = "block";
+		}
+
+		function ripristinaModulo() {
+			form.reset();
+
+// nasconde ricevuta e ritorna il form
+			boxRicevuta.style.display = "none";
+			areaPulsanti.style.display = "none";
+			boxForm.style.display = "block";
+		}
+
+			function nascondiPulsantiStampa() {
+			areaPulsanti.style.display = "none";
+			}
+
+				function mostraPulsantiDopoStampa() {
+					if (boxRicevuta.style.display === "block") {
+					areaPulsanti.style.display = "block";
+					}
+				}
+
+// EVENTI
+
+		form.addEventListener("submit", generaRicevuta);
+		btnNuovo.addEventListener("click", ripristinaModulo);
+		
+</script>
+</body>
+</html>
